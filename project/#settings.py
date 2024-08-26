@@ -8,6 +8,7 @@ https://docs.djangoproject.com/en/2.2/topics/settings/
 
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/2.2/ref/settings/
+
 """
 
 import os
@@ -22,21 +23,15 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = '&670@la%)g1zo2y7(+4+^pl00sb(cjl4rpvkf@2ly)eo+a$1k!'
 
-# ローカル
-DEBUG = True
+# SECURITY WARNING: don't run with debug turned on in production!
+DEBUG = False
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1']
-
-# # 本番
-# DEBUG = False
-
-# ALLOWED_HOSTS = ['timebaibai.com', 'localhost', '127.0.0.1']
+ALLOWED_HOSTS = ["159.65.6.43"]
 
 
 # Application definition
 
 INSTALLED_APPS = [
-    'social_django',
     'booking.apps.BookingConfig',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -44,10 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    #'testApp', 
-    'rest_framework'
 ]
-
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -56,21 +48,15 @@ MIDDLEWARE = [
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
-    #'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
-
-AUTHENTICATION_BACKENDS = [
-    'django.contrib.auth.backends.ModelBackend',  # Djangoのデフォルトの認証バックエンド
-    'social_core.backends.line.LineOAuth2',  # LINEのOAuth2認証バックエンド
-]
- 
 
 ROOT_URLCONF = 'project.urls'
 
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, 'booking/templates')],
+        'DIRS': [],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -114,24 +100,7 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
-LOGGING = {
-    'version': 1,
-    'disable_existing_loggers': False,
-    'handlers': {
-        'console': {
-            'class': 'logging.StreamHandler',
-        },
-        'file': {
-            'level': 'DEBUG',
-            'class': 'logging.FileHandler',
-            'filename': 'debug.log',
-        },
-    },
-    'root': {
-        'handlers': ['console', 'file'],
-        'level': 'DEBUG',
-    },
-}
+
 
 # Internationalization
 # https://docs.djangoproject.com/en/2.2/topics/i18n/
@@ -149,23 +118,13 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
-from dotenv import load_dotenv
-import os
 
-# 静的ファイルの設定
 STATIC_URL = '/static/'
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')  # プロジェクトディレクトリ内の'staticfiles'ディレクトリを指定
+STATIC_ROOT = 'etc/var/public/static/admin/'
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static'),  # 'testApp/static'ディレクトリを静的ファイルのソースとして追加
 ]
-
-
-#本番環境での静的ファイルの設定
-#STATIC_ROOT = '/usr/share/nginx/html/static'
-
 MEDIA_URL = '/media/'
-# MEDIA_ROOT = '/usr/share/nginx/html/media'
-
 
 import datetime
 
@@ -209,47 +168,7 @@ PUBLIC_HOLIDAYS = [
 ]
 
 LOGIN_URL = 'booking:login'
-LOGIN_REDIRECT_URL = 'booking:store_list' # ログイン後にリダイレクトするURL
-LOGOUT_REDIRECT_URL = 'booking:login' 
+LOGIN_REDIRECT_URL = 'booking:store_list'
+LOGOUT_REDIRECT_URL = 'booking:login'
 
 DEFAULT_AUTO_FIELD='django.db.models.AutoField'
-
-LINE_CHANNEL_ID = "2003969601"
-
-LINE_CHANNEL_SECRET = "0f65e88a404ba95833bca990cf312e40"
-
-LINE_REDIRECT_URL = 'http://127.0.0.1:8000/booking/login/line/success/' # リダイレクトURL
-
-import requests
-from linebot import LineBotApi
-from linebot.models import TextSendMessage
-
-# LINE Messaging APIのアクセストークン
-line_access_token = 'SwYJEbvMawMifRQ2yXIvhLLZJHwsBAOQzo4uGOrwIACTOybf3YbvJsWxVWN7KOtEcQJnpjQ6A4nYsc9+8is7ZYU2aIyrc2w1XESYFUOlWb17nScbom6jUxW/8UeejLpoFBPwErqH6JKes7SMSYd/PgdB04t89/1O/w1cDnyilFU='
-
-# # 決済サービスのAPIキー
-PAYMENT_API_KEY = 'sk_live_7ldzwc0xXXyVcarFazjHEEN7bTvXpa7x'
-
-# ユーザーID（LINEログイン後に取得）
-user_id = 'USER_ID'
-
-# LINE Messaging APIの初期化
-line_bot_api = LineBotApi(line_access_token)
-
-# 決済サービスのAPIを使用して決済URLを生成
-PAYMENT_API_URL = 'https://api.payment-service.com/create-payment-url'
-
-# LINE Messaging APIのアクセストークン
-LINE_ACCESS_TOKEN = 'GVMEVG7Q83BMUzcXpShX2s0mfBC9SZ/UnZHVqKgWngRbvdQ2WPNsMOEHLoBcOr/bq36X48a93ErCJq95Wqs/KU5q2djJohPSer8OqkVr4ybtPyl48fTN3u204rMZT/KrBrnuR0oL+u88w4InAjGrfwdB04t89/1O/w1cDnyilFU='
-
-# ユーザーIDとメッセージ
-#ユーザーIDはログイン後に取得
-user_id = 'Udf02e8cec56a91be9005b6f10c6b7a56'
-print('セッティング７７７')
-
-
-CELERY_broker_url = 'redis://localhost:6379/0'
-accept_content = ['json']
-task_serializer = 'json'
-WEBHOOK_URL_BASE = 'https://coiney.com/webhook'
-CANCEL_URL = 'https://coiney.com/cancel'

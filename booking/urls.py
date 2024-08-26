@@ -1,11 +1,12 @@
 from django.contrib.auth.views import LoginView, LogoutView
 from django.urls import path
 from . import views
+from .views import  BookListView, BookDetailView
 
 app_name = 'booking'
 
 urlpatterns = [
-    path('', views.StoreList.as_view(), name='store_list'),
+    path('books/', views.StoreList.as_view(), name='store_list'),
     path('login/', LoginView.as_view(template_name='admin/login.html'), name='login'),
     path('logout/', LogoutView.as_view(), name='logout'),
     path('store/<int:pk>/staffs/', views.StaffList.as_view(), name='staff_list'),
@@ -21,5 +22,8 @@ urlpatterns = [
     path('mypage/schedule/<int:pk>/', views.MyPageSchedule.as_view(), name='my_page_schedule'),
     path('mypage/schedule/<int:pk>/delete/', views.MyPageScheduleDelete.as_view(), name='my_page_schedule_delete'),
     path('mypage/holiday/add/<int:pk>/<int:year>/<int:month>/<int:day>/<int:hour>/', views.my_page_holiday_add, name='my_page_holiday_add'),
+    path('', BookListView.as_view(), name='book_list'),
+    path('books/<int:pk>/', BookDetailView.as_view(), name='book_detail'),
+
 ]
 

@@ -1,13 +1,13 @@
 {% extends 'booking/base.html' %}
 
 {% block content %}
-    <h1>{{ user.username }}のMyPage</h1>
-    <h2>所属店舗</h2>
+    <h1>{{ user.username }}のマイページ</h1>
+    <h2>在籍店舗</h2>
     <ul>
         {% for staff in staff_list %}
             <li><a href="{% url 'booking:my_page_calendar' staff.pk %}">{{ staff }}</a></li>
         {% empty %}
-            <li>まだ店舗がありません。</li>
+            <li>まだ在籍店舗がありません。</li>
         {% endfor %}
     </ul>
 

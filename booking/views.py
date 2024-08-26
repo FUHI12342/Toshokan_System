@@ -10,10 +10,34 @@ from django.urls import reverse_lazy
 from django.utils import timezone
 from django.views import generic
 from django.views.decorators.http import require_POST
-from .models import Store, Staff, Schedule
+from .models import Store, Staff, Schedule, BookInfo
+from django.db.models import Q
 
 User = get_user_model()
 
+
+class BookListView(generic.ListView):
+    model = BookInfo
+    template_name = 'booking/book_list.html'
+    paginate_by = 2
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        keyword = self.request.GET.get('q')
+        if keyword:
+            queryset = queryset.filter(
+                Q(name__icontains=keyword) |  # タイトルで検索
+                Q(author__icontains=keyword) |  # 著者で検索
+                Q(publisher__icontains=keyword) | # 出版社で検索
+                Q(ISBN__icontains=keyword) | # ISBNで検索
+                Q(Division__icontains=keyword)   # 支社で検索
+                # 必要に応じて他のフィールドも追加できます
+            )
+        return queryset
+
+class BookDetailView(generic.DetailView):
+    model = BookInfo
+    template_name = 'booking/book_detail.html'  # このテンプレートを作成する必要があります
 
 class OnlyStaffMixin(UserPassesTestMixin):
     raise_exception = True
@@ -206,6 +230,8 @@ class MyPageSchedule(OnlyScheduleMixin, generic.UpdateView):
 class MyPageScheduleDelete(OnlyScheduleMixin, generic.DeleteView):
     model = Schedule
     success_url = reverse_lazy('booking:my_page')
+
+
 
 
 @require_POST
