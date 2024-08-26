@@ -30,7 +30,7 @@ SECRET_KEY = '&670@la%)g1zo2y7(+4+^pl00sb(cjl4rpvkf@2ly)eo+a$1k!'
 # 本番
 DEBUG = False
 
-ALLOWED_HOSTS = ['104.248.154.35']
+ALLOWED_HOSTS = ['104.248.154.35', 'timebaibai.com']
 
 
 # Application definition
@@ -245,7 +245,7 @@ LINE_ACCESS_TOKEN = 'GVMEVG7Q83BMUzcXpShX2s0mfBC9SZ/UnZHVqKgWngRbvdQ2WPNsMOEHLoB
 # ユーザーIDとメッセージ
 #ユーザーIDはログイン後に取得
 user_id = 'Udf02e8cec56a91be9005b6f10c6b7a56'
-print('セッティング７７７')
+
 
 
 CELERY_broker_url = 'redis://localhost:6379/0'
